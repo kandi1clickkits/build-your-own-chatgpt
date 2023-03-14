@@ -11,7 +11,6 @@ SET KIT_NAME=build-your-own-chatgpt
 SET WORKING_DIR=C:\kandikits\!KIT_NAME!
 REM update below path if required
 SET PY_VERSION=3.9.8
-REM SET PY_VERSION=3.7.4
 SET MAJOR_VERSION=%PY_VERSION:~0,1%
 SET MINOR_VERSION=%PY_VERSION:~2,1%
 SET PATCH_VERSION=%PY_VERSION:~4,2%
@@ -41,10 +40,6 @@ CD /D !WORKING_DIR!
 SET STARTTIME=%TIME%
 CALL :LOG "START TIME : %TIME%"
 TITLE Installing %KIT_NAME% kit 5%% xxxxx_______________________________________________________________________________________________
-CALL :Install_ms_vc_redist
-IF ERRORLEVEL 1 (
-	CALL :Show_Error_And_Exit
-)
 CALL :Main
 CALL :exit_spinner
 ECHO "%KIT_NAME% kit installed at location : !WORKING_DIR!"
@@ -116,7 +111,7 @@ IF ERRORLEVEL 1 (
 		   timeout 1  >nul
 		   for /f %%A in ('copy /Z "%~dpf0" nul') do set "CR=%%A"
 			<nul set/p"=->!CR!"
-		   ECHO 2. A valid python is detected at system level hence skipping python installation and proceeding with installing dependencies
+		   ECHO 1. A valid python is detected at system level hence skipping python installation and proceeding with installing dependencies
 			CALL :LOG "A valid python is detected at system level"
 			CALL :Install_dependencies
 			IF ERRORLEVEL 1 (
@@ -139,7 +134,7 @@ IF EXIST !WORKING_DIR!\%EXTRACTED_REPO_DIR%\ (
 	 timeout 1  >nul
 	 for /f %%A in ('copy /Z "%~dpf0" nul') do set "CR=%%A"
 	 <nul set/p"=->!CR!"
-	 ECHO 4. Repo already available in the location !WORKING_DIR!.
+	 ECHO 3. Repo already available in the location !WORKING_DIR!.
 	 TITLE Installing %KIT_NAME% kit 100%% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 ) ELSE (
@@ -149,16 +144,14 @@ IF EXIST !WORKING_DIR!\%EXTRACTED_REPO_DIR%\ (
     	timeout 1  >nul
 	for /f %%A in ('copy /Z "%~dpf0" nul') do set "CR=%%A"
 	<nul set/p"=->!CR!"
-	ECHO 4. Repo installed
+	ECHO 3. Repo downloaded
     	CALL :LOG "Extracting the repo ..."
     	tar -xvf %REPO_NAME% >> !WORKING_DIR!\log.txt 2>&1
-    	TITLE Installing %KIT_NAME% kit 90%% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx__________
-	CALL :Download_image
     	TITLE Installing %KIT_NAME% kit 100%% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     	timeout 1  >nul
 	for /f %%A in ('copy /Z "%~dpf0" nul') do set "CR=%%A"
 	<nul set/p"=->!CR!"
-	ECHO 5. Repo extracted
+	ECHO 4. Repo extracted
 )
 EXIT /B 0	
 
@@ -166,9 +159,7 @@ EXIT /B 0
 :Install_python_and_modules
 CALL :LOG "Downloading python %PY_VERSION% ... "
 REM curl -o python-%PY_VERSION%-amd64.exe %PY_DOWNLOAD_URL%
-REM bitsadmin /transfer python_download_job /download %PY_DOWNLOAD_URL% "%cd%\python-%PY_VERSION%-amd64.exe"
 MKDIR "!WORKING_DIR!\%PY_VERSION%" >> !WORKING_DIR!\log.txt 2>&1
-REM bitsadmin /transfer python_download_job /download %PY_DOWNLOAD_URL% "!WORKING_DIR!\%PY_VERSION%\python-%PY_VERSION%-embed-amd64.zip"
 curl --output "!WORKING_DIR!\%PY_VERSION%\python-%PY_VERSION%-embed-amd64.zip" %PY_DOWNLOAD_URL% >> !WORKING_DIR!\log.txt 2>&1
 IF ERRORLEVEL 1 (
     EXIT /B 1
@@ -205,7 +196,7 @@ IF ERRORLEVEL 1 (
 		timeout 1  >nul
 		for /f %%A in ('copy /Z "%~dpf0" nul') do set "CR=%%A"
 		<nul set/p"=->!CR!"
-		ECHO 2. python version !PY_VERSION! installed and proceeding with installing dependencies
+		ECHO 1. python version !PY_VERSION! installed and proceeding with installing dependencies
 		CALL :Install_dependencies
 		IF ERRORLEVEL 1 (
 			EXIT /B 1
@@ -235,7 +226,7 @@ TITLE Installing %KIT_NAME% kit 60%% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 timeout 1  >nul
 for /f %%A in ('copy /Z "%~dpf0" nul') do set "CR=%%A"
 <nul set/p"=->!CR!"
-ECHO 3. Dependencies installed 
+ECHO 2. Dependencies installed 
 EXIT /B 0
 
 :Show_Error_And_Exit
