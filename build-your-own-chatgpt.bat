@@ -213,7 +213,6 @@ bitsadmin /transfer dependency_download_job /download /priority foreground %REPO
 CALL :LOG "!PATH!"
 python -m pip install virtualenv >> !WORKING_DIR!\log.txt 2>&1
 python -m virtualenv %VIRTUALENV_NAME%>> !WORKING_DIR!\log.txt 2>&1
-REM python -m venv kkit
 pushd .
 cd .\%VIRTUALENV_NAME%\Scripts
 CALL :LOG "%cd%"
